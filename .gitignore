@@ -1,6 +1,3 @@
-# Raw and processed data (ONS/DEFRA downloads - large, redistributable from source instead)
-data/
-
 # Power BI temp/cache files
 *.pbix.lock
 .pbi/
