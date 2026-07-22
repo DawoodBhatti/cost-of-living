@@ -1,18 +1,11 @@
 import pandas as pd
 
-
-def ready():
-    print("ready to go")
+from utils import ready, load, save_dictionary_to_excel
 
 
 # ==========================
 #       Load Methods
 # ==========================
-
-def load(filename):
-    """Return a dictionary of DataFrames. Each Excel sheet = one DataFrame."""
-    return pd.read_excel(filename, sheet_name=None)
-
 
 def load_food_expenditure_by_income():
     return load("data/raw/defra_family_food_expenditure_by_income_decile_2024.xlsx")
@@ -47,6 +40,21 @@ def aggregate_columns():
     pass
 
 
+def fix_column_typo_expenditure_by_income(dict1):
+    """Sheet Decile_6 has a typo in column headings
+        Major Food Code...8	Minor Food Code...9
+        which should read: 2001-02	2002-03"""
+    df = dict1["Decile_6"]
+
+    assert df.iloc[3, 7] == "Major Food Code...8"
+    assert df.iloc[3, 8] == "Minor Food Code...9"
+
+    df.iloc[3, 7] = "2001-02"
+    df.iloc[3, 8] = "2002-03"
+
+    return dict1
+
+
 def preprocess_food_expenditure_by_income(dict1):
     """Drop first 2 sheets from excel workbook."""
     return trim_dictionary(dict1, 2)
@@ -79,6 +87,22 @@ def process_food_expenditure_by_region(dict2):
     return dict2
     
 
+PERIOD_COLUMNS = ['2001-02', '2002-03', '2003-04', '2004-05', '2005-06',
+                   2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015,
+                   201516, 201617, 201718, 201819, 201920, 202021, 202122, 202223, 202324]
+
+
+def convert_pence_to_pounds(dict1):
+    """Expenditure values are published in pence (Units == 'p'). Convert the
+    period columns to pounds so downstream views/measures don't have to
+    remember to divide by 100."""
+    for df in dict1.values():
+        cols = [c for c in PERIOD_COLUMNS if c in df.columns]
+        df[cols] = df[cols] / 100
+
+    return dict1
+
+
 def preprocess_regional_gdhi(dict3):
     """Drop first 3 sheets from excel workbook."""
     return trim_dictionary(dict3, 3)
@@ -92,19 +116,6 @@ def process_regional_gdhi(dict3):
         
     return dict3
 
-
-# ==========================
-#    Save Methods
-# ==========================
-
-def save_excel(pp_dict, file_dir):
-    """save df elements of dictionary to a single excel sheet"""
-    
-    
-    with pd.ExcelWriter(file_dir) as writer:
-        for key in pp_dict.keys():
-            pp_dict[key].to_excel(writer, sheet_name = key, index = False)
-    
 
 # ==========================
 #           Main
@@ -122,10 +133,13 @@ if __name__ == "__main__":
 
     # Preprocess + process
     p_dict1 = preprocess_food_expenditure_by_income(dict1)
+    p_dict1 = fix_column_typo_expenditure_by_income(p_dict1)
     p_dict1 = process_food_expenditure_by_income(p_dict1)
+    p_dict1 = convert_pence_to_pounds(p_dict1)
 
     p_dict2 = preprocess_food_expenditure_by_region(dict2)
     p_dict2 = process_food_expenditure_by_region(p_dict2)
+    p_dict2 = convert_pence_to_pounds(p_dict2)
 
     p_dict3 = preprocess_regional_gdhi(dict3)
     p_dict3 = process_regional_gdhi(p_dict3)
@@ -133,9 +147,9 @@ if __name__ == "__main__":
     print("processing stages done")
     
     # Save
-    save_excel(p_dict1, "data/processed/defra_family_food_expenditure_by_income_decile_2024.xlsx")
-    save_excel(p_dict2, "data/processed/defra_family_food_expenditure_by_region_2024.xlsx")
-    save_excel(p_dict3, "data/processed/ons_regional_gdhi_local_authority_1997-2023.xlsx")
+    save_dictionary_to_excel(p_dict1, "data/processed/defra_family_food_expenditure_by_income_decile_2024.xlsx")
+    save_dictionary_to_excel(p_dict2, "data/processed/defra_family_food_expenditure_by_region_2024.xlsx")
+    save_dictionary_to_excel(p_dict3, "data/processed/ons_regional_gdhi_local_authority_1997-2023.xlsx")
 
     print("processed data saved!")
 
