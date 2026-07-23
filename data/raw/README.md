@@ -1,12 +1,15 @@
 # Raw data
 
-Files as downloaded from source, with one exception noted below.
+Files as downloaded from source, with one exception noted below. Organized into
+one subfolder per dataset.
 
 | File | Source | Original format | Download page |
 |---|---|---|---|
-| `ons_regional_gdhi_local_authority_1997-2023.xlsx` | ONS | `.xlsx` (unmodified) | [Regional gross disposable household income: local authorities](https://www.ons.gov.uk/economy/regionalaccounts/grossdisposablehouseholdincome/datasets/regionalgrossdisposablehouseholdincomelocalauthorities) |
-| `defra_family_food_expenditure_by_region_2024.ods` | DEFRA/GOV.UK | `.ods` (original, unmodified) | [Family food datasets](https://www.gov.uk/government/statistical-data-sets/family-food-datasets) (Countries and Regions expenditure file) |
-| `defra_family_food_expenditure_by_income_decile_2024.ods` | DEFRA/GOV.UK | `.ods` (original, unmodified) | [Family food datasets](https://www.gov.uk/government/statistical-data-sets/family-food-datasets) (Equivalised Income Decile expenditure file) |
+| `ons_gdhi/ons_regional_gdhi_local_authority_1997-2023.xlsx` | ONS | `.xlsx` (unmodified) | [Regional gross disposable household income: local authorities](https://www.ons.gov.uk/economy/regionalaccounts/grossdisposablehouseholdincome/datasets/regionalgrossdisposablehouseholdincomelocalauthorities) |
+| `defra_family_food/defra_family_food_expenditure_by_region_2024.ods` | DEFRA/GOV.UK | `.ods` (original, unmodified) | [Family food datasets](https://www.gov.uk/government/statistical-data-sets/family-food-datasets) (Countries and Regions expenditure file) |
+| `defra_family_food/defra_family_food_expenditure_by_income_decile_2024.ods` | DEFRA/GOV.UK | `.ods` (original, unmodified) | [Family food datasets](https://www.gov.uk/government/statistical-data-sets/family-food-datasets) (Equivalised Income Decile expenditure file) |
+| `ons_cpi/ons_cpi_all_items_d7bt.csv` | ONS | `.csv` (unmodified) | [CPI INDEX 00: ALL ITEMS 2015=100 (D7BT)](https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/d7bt/mm23) |
+| `ons_cpi/ons_cpi_food_nonalcoholic_d7bu.csv` | ONS | `.csv` (unmodified) | [CPI INDEX 01: FOOD AND NON-ALCOHOLIC BEVERAGES 2015=100 (D7BU)](https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/d7bu/mm23) |
 
 ## Note on the DEFRA `.xlsx` files
 
@@ -15,3 +18,11 @@ converted to `.xlsx` (same content, no data changes) so `clean.py` could load
 them with `pd.read_excel()` without an extra `odfpy` dependency. Both the
 original `.ods` and the converted `.xlsx` are kept here for provenance —
 `clean.py` reads from the `.xlsx` versions.
+
+## Note on CPI data
+
+CPI series (D7BT, D7BU) are monthly index values (2015=100), not currency
+amounts — see the project README for how they're compared against the DEFRA
+expenditure figures. `clean/ons_cpi.py` keeps only the annual rows (ONS's
+export mixes annual/quarterly/monthly periods in one column); no view uses
+this data yet.
