@@ -17,8 +17,8 @@ if __name__ == "__main__":
     print("views built")
 
     #Save views
-    save_dataframe_to_excel(v_df1, "data/views/defra_total_spend_by_decile.xlsx")
-    save_dataframe_to_excel(v_df2, "data/views/ons_income_by_decile.xlsx")
+    save_dataframe_to_excel(v_df1, "data/views/defra_total_£_spend_by_decile.xlsx")
+    save_dataframe_to_excel(v_df2, "data/views/ons_equivalised_income_by_decile.xlsx")
     print("views saved to excel")
 
     #print("views saved")
