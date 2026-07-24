@@ -11,10 +11,12 @@ def load_food_expenditure_by_income():
     return load("data/processed/defra_family_food/defra_family_food_expenditure_by_income_decile_2024.xlsx")
 
 
+#currently unused
 def load_food_expenditure_by_region():
     return load("data/processed/defra_family_food/defra_family_food_expenditure_by_region_2024.xlsx")
 
 
+#currently unused
 def load_regional_gdhi():
     return load("data/processed/ons_gdhi/ons_regional_gdhi_local_authority_1997-2023.xlsx")
 
@@ -35,8 +37,6 @@ def build_total_spend_by_decile(dict1):
 
     #find code t1 which corresponds to total spend and extract the periods
     for name, df in dict1.items():
-
-        print("working on : ", name)
 
         df_temp = df.loc[df["Code"] == "t1"][period_cols]
         df_temp["Decile"]=name

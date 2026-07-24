@@ -26,6 +26,11 @@ def trim_dictionary(dict1, start_index):
     return pp_dict
 
 
+def dataframe_from_dictionary(dict1, target):
+    """Extract a single DataFrame from a dictionary"""
+    return dict1[target]
+
+
 # ==========================
 #    Save Methods
 # ==========================

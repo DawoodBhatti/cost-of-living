@@ -12,9 +12,10 @@ region — compared against income and inflation, using official government data
 | ONS | [Regional gross disposable household income: local authorities](https://www.ons.gov.uk/economy/regionalaccounts/grossdisposablehouseholdincome/datasets/regionalgrossdisposablehouseholdincomelocalauthorities) | Local authority (361 areas) | 1997–2023, published 10 Sep 2025 | Downloaded, parked for now (not used in any view) |
 | ONS | [CPI Index, All items (D7BT)](https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/d7bt/mm23) | UK-wide | Monthly, to Jun 2026 | Cleaned (annual rows only), not yet used in a view |
 | ONS | [CPI Index, Food & non-alcoholic beverages (D7BU)](https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/d7bu/mm23) | UK-wide | Monthly, to Jun 2026 | Cleaned (annual rows only), not yet used in a view |
+| ONS | [Effects of taxes and benefits on household income (decile points)](https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth/datasets/householddisposableincomeandinequality) | UK-wide, by income decile | FYE 2023/24, published 2 May 2025 | Downloaded, not yet processed |
 
 Raw downloads live in `data/raw/<dataset>/` — one subfolder per source
-(`ons_gdhi/`, `defra_family_food/`, `ons_cpi/`), see
+(`ons_gdhi/`, `defra_family_food/`, `ons_cpi/`, `ons_income_by_decile/`), see
 [`data/raw/README.md`](data/raw/README.md) for exact files and links.
 Data is tracked in git (not gitignored), so the repo is self-contained.
 
@@ -38,6 +39,16 @@ ends up as a **spend-vs-price** comparison rather than a like-for-like price
 comparison: DEFRA's expenditure figures reflect both price changes *and*
 household behavior changes (buying more/less, trading down to cheaper items),
 not price movement alone.
+
+### What the income-by-decile £ ranges are for
+
+DEFRA's `Decile_1`...`Decile_10` sheets are just labeled by number — no £
+figures attached. This ONS dataset gives the actual income boundary at each
+decile (e.g. Decile 1 = below £16,874/year, Decile 10 = above £71,077/year,
+FYE 2023/24 prices), so a chart axis can show "Decile 1 (<£16.9k)" instead of
+just "Decile 1". It's from a different ONS survey than DEFRA's own (see
+[`data/raw/README.md`](data/raw/README.md) for the caveat on that), used here
+as a close approximation rather than an exact match.
 
 ## Folder structure
 
@@ -81,4 +92,6 @@ relative imports and the `data/...` paths both depend on that.
 DEFRA food-spend data is cleaned and has one view built (total spend by
 decile). CPI data is downloaded and cleaned (annual values only) but not yet
 used in a view. GDHI data is cleaned but currently parked (not used in any
-view).
+view). Income-by-decile data is downloaded, not yet cleaned — Ali is writing
+that cleaning/view-building code himself, to extract decile £ ranges into a
+view for labeling the decile chart.
