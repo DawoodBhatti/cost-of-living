@@ -31,6 +31,23 @@ def dataframe_from_dictionary(dict1, target):
     return dict1[target]
 
 
+PERIOD_COLUMNS = ['2001-02', '2002-03', '2003-04', '2004-05', '2005-06',
+                  2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015,
+                  201516, 201617, 201718, 201819, 201920, 202021, 202122, 202223, 202324]
+
+
+def parse_defra_period_to_year(period):
+    """Convert a DEFRA period label to its start year as an int.
+    Handles dash-separated financial years ("2002-03"), concatenated
+    financial years ("201516"), and plain calendar years (2006)."""
+    period = str(period)
+    if "-" in period:
+        return int(period[:4])
+    if len(period) == 6:
+        return int(period[:4])
+    return int(period)
+
+
 # ==========================
 #    Save Methods
 # ==========================
